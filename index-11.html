@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, interactive-widget=resizes-visual">
+<title>流水账</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#16233A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAE1ElEQVR4nO3dwXHjRhQEUEjlGJyA7w7AZ0XjgByNzgrAdyWgJOyDi2vtLkkB4AzmD/q9AMQh0D0fEFDS01LUr7/98c/oNdDOx/vb0+g1XFNiUcKeqUIphi1A6PlsVBkO/VChZ40jy3DIBwk+exxRhK4fIPi00LMIXX6w4NNDjyI8t/6Bwk8vPbLVtADCT2+tM9ZkpAg+I7S4JHp4Agg/o7TI3kMFEH5GezSDuwsg/FTxSBZ3FUD4qWZvJjcXQPipak82NxVA+Klua0ZXF0D4mcWWrK4qgPAzm7WZbf4qBMzkywLY/ZnVmuzeLYDwM7uvMnyzAMLPWdzLsnsAol0tgN2fs7mVaROAaD8VwO7PWV3LtglAtO8KYPfn7H7MuAlANAUg2rcCuPwhxeesmwBEUwCiPS+Lyx/yXDJvAhBNAYimAERTAKI9uQEmmQlANAUgmgIQTQGIpgBEUwCiKQDRfhm9gC3+/uuQf2xPA7//OcfjpWkmgPDPZZbzVf5J8CwHktsqT4NpJgD0ULoAdv9zqHweyxag8kFju6rns2wB4AgKQDQFIJoCEE0BiFa2AJUfnrBd1fNZtgDLUvegsU3l81i6ANBb+XeBLqo+SOG2yjv/xTQTYIaDyf9mOV/TTADoYZoJAD0oANEUgGgKQDQFIJoCEE0BiKYARFMAoikA0RSAaFP9bdCXl5fRS5jC6+vr6CVMY5oJIPzrOVbrlX8b1Ml8jGlw3zQTAHooXQC7/+Mcw/vKFsCJa8exvK1sAeAICkA0BSCaAhBNAYhWtgAe4LTjWN5WtgDL4sS14BjeV7oA0Fv5d4EuPMzZxs6/zjQTwAldz7Fab5oJAD1MMwGgBwUgmgIQTQGIpgBEUwCiKQDRFIBoCkA0BSCaAhBNAYjmj+MO4o3NGqaZAGcK/7Kc7/vMqvzr0AlBMQ3GmWYCQA+lC5Cw+y9LzvesqGwB0kKR9n2rKFsAOIICEE0BiKYARFMAopUtQNrDobTvW0XZAixLTihSvmdFpQsAvZV/F+jijA+K7PzjTTMBzhaWs32fWU0zAaCHaSYA9KAARFMAoikA0RSAaApANAUgmgIQTQGIpgBEUwCi+dugK3l57ZymmQCjX4ce/fn0Uf5t0IrBMw3OY5oJAD2ULkDF3X9Z6q6L7coWoHrIqq+PdcoWAI6gAERTAKIpANEUgGhlC1D9YVP19bFO2QIsS92QVV0X25UuAPRW/l2giwoPnuz85zPNBBgdvtGfTx/TTADoYZoJAD0oANEUgGgKQDQFIJoCEO354/3tafQiYISP97cnE4BoCkA0BSCaAhDteVn+uxkYvRA40iXzJgDRFIBo3wrgMogUn7NuAhBNAYj2XQFcBnF2P2bcBCDaTwUwBTira9k2AYh2tQCmAGdzK9MmANFuFsAU4CzuZfnuBFACZvdVhr+8BFICZrUmu+4BiLaqAKYAs1mb2dUTQAmYxZasbroEUgKq25rRzfcASkBVe7K56yZYCahmbyZ3/xZICajikSw+9GtQJWC0RzP48HMAJWCUFtlrGl7/b4wjtNx0mz4JNg3orXXGmr8KoQT00iNbXcPqkogWem6qh+zWisAeR1xNHHq5ogisceRl9LDrdWXgs1H3jiVuWJUhU4VfmAxfwC1KcS4Vwn7Nv5wKUWJHoXsQAAAAAElFTkSuQmCC">
+<style>
+  :root{
+    --ink:#16233A; --ink-soft:#41506B; --paper:#EDEEE9; --paper-hi:#FFFFFF;
+    --line:#DADCD4; --gold:#E8B93B; --green:#2E7D5B; --danger:#B5443C; --amber:#B8791F;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC","Segoe UI",system-ui,sans-serif;
+    font-size:15px;line-height:1.5;display:flex;flex-direction:column;overscroll-behavior:none}
+  .num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  header{background:var(--ink);color:#fff;padding:calc(env(safe-area-inset-top) + 14px) 20px 16px;
+    border-radius:0 0 22px 22px;flex:0 0 auto}
+  .hrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .seg{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px}
+  .seg button{padding:5px 14px;border-radius:999px;font-size:13px;color:rgba(255,255,255,.65)}
+  .seg button[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:600}
+  .amount{font-size:52px;font-weight:600;line-height:1.1;margin:14px 0 2px;display:flex;align-items:baseline;gap:6px;
+    transition:transform .18s ease,opacity .18s ease}
+  .amount .cur{font-size:24px;font-weight:400;opacity:.55}
+  .amount.zero{opacity:.35}
+  .amount.pop{transform:translateY(-10px) scale(.9);opacity:0}
+  .sub{font-size:12.5px;color:rgba(255,255,255,.55);min-height:19px}
+  .week{display:flex;gap:6px;margin-top:16px}
+  .day{flex:1;text-align:center}
+  .day i{display:block;height:26px;border-radius:7px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14)}
+  .day.on i{background:var(--gold);border-color:var(--gold)}
+  .day.today i{box-shadow:0 0 0 2px rgba(232,185,59,.35)}
+  .day.flash i{animation:flash .5s ease}
+  @keyframes flash{0%{transform:scale(1)}45%{transform:scale(1.22)}100%{transform:scale(1)}}
+  .day span{display:block;font-size:10px;margin-top:5px;color:rgba(255,255,255,.4)}
+
+  main{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .pane{display:none;padding:14px 16px 10px}
+  .pane.on{display:block}
+
+  .cats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .cat{background:var(--paper-hi);border:1px solid var(--line);border-radius:12px;padding:10px 2px 8px;
+    text-align:center;font-size:11.5px;color:var(--ink-soft)}
+  .cat b{display:block;font-size:20px;font-weight:400;line-height:1.25;filter:grayscale(.35);opacity:.85}
+  .cat[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .cat[aria-pressed="true"] b{filter:none;opacity:1}
+  .opt{margin-top:10px}
+  .tog{width:100%;padding:10px;border-radius:11px;border:1px dashed var(--line);
+    background:var(--paper-hi);font-size:13.5px;color:var(--ink-soft)}
+  .tog[aria-pressed="true"]{background:#E8EEF4;border:1px solid #5E7F9E;color:#33536E;font-weight:500}
+  .opt select{width:100%;font:inherit;background:var(--paper-hi);border:1px solid var(--line);
+    border-radius:11px;padding:10px 12px;color:var(--ink)}
+  .badge{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:5px;background:#E8EEF4;color:#33536E;margin-left:5px}
+  .badge.done{background:#DFEDE6;color:var(--green)}
+  .badge.off{background:#F0EEE8;color:var(--ink-soft)}
+  .rev{background:#E8EEF4;border:1px solid #C6D5E2;border-radius:14px;padding:13px 14px;margin-bottom:16px}
+  .rev h4{margin:0 0 4px;font-size:14px;font-weight:600;color:#33536E}
+  .rev p{margin:0 0 10px;font-size:12.5px;color:#4C6880;line-height:1.6}
+  .rev .cd{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid #D5E0EA;font-size:13px}
+  .rev .cd span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rev .cd button{padding:5px 10px;border-radius:8px;border:1px solid #B9CADA;background:#fff;font-size:12.5px}
+  .rev .cd button.y{background:#33536E;color:#fff;border-color:#33536E}
+  .adv{background:var(--paper-hi);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:10px}
+  .adv .r{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0}
+  .adv .r span:first-child{color:var(--ink-soft)}
+  .adv .r.big{font-size:15px;font-weight:600;border-top:1px solid var(--line);margin-top:5px;padding-top:9px}
+  .adv ul{margin:10px 0 0;padding:10px 0 0;border-top:1px dashed var(--line);list-style:none;font-size:12.5px;color:var(--ink-soft)}
+  .adv li{padding:3px 0}
+  .meta{display:flex;gap:8px;margin:12px 0 10px}
+  .meta input{font:inherit;color:inherit;background:var(--paper-hi);border:1px solid var(--line);
+    border-radius:11px;padding:10px 12px;min-width:0}
+  .meta input[type=text]{flex:1}
+  .meta input[type=date]{flex:0 0 128px;color:var(--ink-soft);font-size:13.5px}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .pad button{background:var(--paper-hi);border:1px solid var(--line);border-radius:12px;padding:14px 0;font-size:22px;font-weight:500}
+  .pad button:active{background:#E3E5DD}
+  .save{width:100%;margin:10px 0 4px;padding:15px;border-radius:14px;background:var(--gold);
+    color:var(--ink);font-size:16px;font-weight:600}
+  .save:disabled{background:#DFE1DA;color:#A2A69C}
+
+  .dgroup{margin-bottom:18px}
+  .dhead{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--ink-soft);
+    padding:0 2px 7px;border-bottom:1px solid var(--line)}
+  .item{display:flex;align-items:center;gap:11px;padding:11px 2px;border-bottom:1px solid rgba(218,220,212,.6);width:100%;text-align:left}
+  .dot{flex:0 0 32px;height:32px;border-radius:10px;display:grid;place-items:center;font-size:16px}
+  .item .t{flex:1;min-width:0}
+  .item .t b{font-weight:500;font-size:14.5px}
+  .item .t small{display:block;color:var(--ink-soft);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .item .v{font-weight:600;font-size:15px}
+  .v.in{color:var(--green)}
+
+  .bud{background:var(--ink);color:#fff;border-radius:16px;padding:15px 16px;margin-bottom:16px}
+  .bud .r1{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:rgba(255,255,255,.6)}
+  .bud .big{font-size:29px;font-weight:600;margin:6px 0 10px}
+  .bud .gauge{height:10px;background:rgba(255,255,255,.15);border-radius:6px;position:relative}
+  .bud .gauge i{display:block;height:100%;background:var(--gold);border-radius:6px}
+  .bud .gauge i.over{background:#E07A6B}
+  .bud .mark{position:absolute;top:-3px;width:2px;height:16px;background:#fff;opacity:.8}
+  .bud .r2{font-size:12.5px;color:rgba(255,255,255,.6);margin-top:9px}
+  .bud .set{display:flex;gap:8px;margin-top:12px}
+  .bud .set input{flex:1;font:inherit;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+    color:#fff;border-radius:10px;padding:9px 12px;min-width:0}
+  .bud .set input::placeholder{color:rgba(255,255,255,.45)}
+  .bud .set button{background:var(--gold);color:var(--ink);border-radius:10px;padding:9px 16px;font-weight:600;font-size:14px}
+  .mnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .mnav button{padding:6px 12px;border:1px solid var(--line);border-radius:9px;background:var(--paper-hi);font-size:14px}
+  .total{font-size:33px;font-weight:600;margin:2px 0 4px}
+  .bar{margin:12px 0}
+  .bar .l{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+  .bar .l span:last-child{color:var(--ink-soft)}
+  .track{height:9px;background:#E1E3DB;border-radius:6px;overflow:hidden}
+  .track i{display:block;height:100%;border-radius:6px}
+  .cols{display:flex;align-items:flex-end;gap:2px;height:74px;margin:14px 0 6px}
+  .cols i{flex:1;background:var(--ink);opacity:.72;border-radius:3px 3px 0 0;min-height:2px}
+
+  /* 体检 */
+  .verdict{border-radius:18px;padding:18px 17px;color:#fff;margin-bottom:16px;background:var(--ink)}
+  .verdict.y{background:#7A5B18}
+  .verdict.r{background:#6E2A25}
+  .verdict .lamp{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:7px}
+  .verdict h2{margin:0 0 8px;font-size:21px;font-weight:600;letter-spacing:-.01em}
+  .verdict p{margin:0;font-size:13.5px;line-height:1.65;color:rgba(255,255,255,.78)}
+  .verdict .when{margin-top:12px;padding-top:11px;border-top:1px solid rgba(255,255,255,.16);
+    font-size:12px;color:rgba(255,255,255,.55)}
+  h3.sec{font-size:12.5px;font-weight:600;color:var(--ink-soft);margin:20px 2px 9px}
+  .chk{background:var(--paper-hi);border:1px solid var(--line);border-radius:13px;margin-bottom:8px;overflow:hidden}
+  .chk>button{display:flex;align-items:center;gap:10px;width:100%;padding:13px 14px;text-align:left}
+  .chk .lp{flex:0 0 9px;height:9px;border-radius:50%}
+  .lp.g{background:var(--green)} .lp.y{background:var(--gold)} .lp.r{background:var(--danger)} .lp.n{background:#B7BAB2}
+  .chk .nm{flex:1;font-size:14.5px;font-weight:500}
+  .chk .vv{font-size:13.5px;color:var(--ink-soft)}
+  .chk .cv{display:none;padding:0 14px 13px;font-size:13px;color:var(--ink-soft);line-height:1.7}
+  .chk.open .cv{display:block}
+  .chk .cv b{color:var(--ink);font-weight:600}
+  .chk .arw{color:#B7BAB2;font-size:12px}
+  .issue{background:var(--paper-hi);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:10px;
+    border-left:3px solid var(--line)}
+  .issue.y{border-left-color:var(--gold)} .issue.r{border-left-color:var(--danger)} .issue.g{border-left-color:var(--green)}
+  .issue h4{margin:0 0 9px;font-size:15px;font-weight:600;line-height:1.45}
+  .issue dl{margin:0;font-size:13.5px;line-height:1.65}
+  .issue dt{color:var(--ink-soft);font-size:11.5px;margin-top:9px}
+  .issue dd{margin:1px 0 0;color:var(--ink)}
+  .issue dd b{font-weight:600}
+  .ok{background:var(--paper-hi);border:1px solid var(--line);border-radius:14px;padding:16px;
+    font-size:13.5px;color:var(--ink-soft);line-height:1.7}
+  .setup{background:var(--paper-hi);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-top:8px}
+  .setup label{display:block;font-size:13.5px;font-weight:500;margin-bottom:3px}
+  .setup small{display:block;color:var(--ink-soft);font-size:12px;line-height:1.6;margin-bottom:10px}
+  .setup .row{display:flex;gap:8px}
+  .setup input{flex:1;font:inherit;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-width:0}
+  .setup .row button{background:var(--ink);color:#fff;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:500}
+  .aibtn{width:100%;margin-top:10px;padding:13px;border-radius:13px;border:1px dashed var(--line);
+    background:var(--paper-hi);font-size:14px;color:var(--ink-soft)}
+  .aibox{background:var(--paper-hi);border:1px solid var(--line);border-radius:14px;padding:15px;margin-top:10px;
+    font-size:13.5px;line-height:1.75;white-space:pre-wrap}
+  .cashcard{background:var(--ink);color:#fff;border-radius:18px;padding:17px 17px 15px;margin-bottom:14px}
+  .cashcard .lb{font-size:12.5px;color:rgba(255,255,255,.6)}
+  .cashcard .big{font-size:38px;font-weight:600;margin:5px 0 2px;letter-spacing:-.02em}
+  .cashcard .big.neg{color:#E8A093}
+  .cashcard .ln{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;color:rgba(255,255,255,.72)}
+  .cashcard .ln.tot{border-top:1px solid rgba(255,255,255,.18);margin-top:6px;padding-top:9px;
+    font-weight:600;color:#fff;font-size:14.5px}
+  .cashcard .brk{margin-top:12px;padding-top:11px;border-top:1px solid rgba(255,255,255,.16)}
+  .cashcard .hint{font-size:11.5px;color:rgba(255,255,255,.5);margin-top:9px;line-height:1.6}
+  .split{display:flex;height:11px;border-radius:6px;overflow:hidden;margin:4px 0 14px;background:#E1E3DB}
+  .split i{display:block;height:100%}
+  .bk{background:var(--paper-hi);border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:9px}
+  .bk .t{display:flex;align-items:center;gap:9px}
+  .bk .t b{flex:1;font-size:15px;font-weight:600}
+  .bk .t .amt{font-size:15px;font-weight:600}
+  .bk .pc{display:flex;align-items:center;gap:8px;margin-top:9px}
+  .bk .pc input{width:62px;font:inherit;background:var(--paper);border:1px solid var(--line);
+    border-radius:9px;padding:6px 8px;text-align:right}
+  .bk .pc span{font-size:12.5px;color:var(--ink-soft);flex:1}
+  .bk .pc button{padding:6px 10px;border-radius:9px;border:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
+  .bk .goal{margin-top:10px}
+  .bk .goal .gl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);margin-bottom:4px}
+  .warnbar{background:#F6E3E0;color:var(--danger);border-radius:11px;padding:9px 12px;font-size:12.5px;margin-bottom:10px}
+  .bigbtn{width:100%;padding:14px;border-radius:13px;background:var(--gold);color:var(--ink);
+    font-size:15.5px;font-weight:600;margin-bottom:10px}
+  .bigbtn.ghost{background:var(--paper-hi);border:1px solid var(--line);color:var(--ink-soft);font-weight:500}
+  .rep{background:var(--paper-hi);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;
+    font-size:12.5px;line-height:1.75;white-space:pre-wrap;font-variant-numeric:tabular-nums;
+    max-height:340px;overflow-y:auto}
+  .qs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .qs button{padding:11px 8px;border-radius:11px;border:1px solid var(--line);background:var(--paper-hi);
+    font-size:13px;color:var(--ink)}
+  .qs button:first-child{grid-column:1/-1;background:var(--ink);color:#fff;border-color:var(--ink);font-weight:600}
+  .foot{font-size:11.5px;color:var(--ink-soft);line-height:1.65;padding:14px 2px 6px}
+  .empty{text-align:center;color:var(--ink-soft);font-size:14px;padding:48px 20px;line-height:1.75}
+  .empty b{display:block;font-size:15px;color:var(--ink);margin-bottom:6px;font-weight:600}
+
+  nav{flex:0 0 auto;display:flex;background:var(--paper-hi);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+  nav button{flex:1;padding:11px 0 9px;font-size:10.5px;color:var(--ink-soft)}
+  nav button b{display:block;font-size:17px;font-weight:400;line-height:1.3;opacity:.55}
+  nav button[aria-pressed="true"]{color:var(--ink);font-weight:600}
+  nav button[aria-pressed="true"] b{opacity:1}
+
+  .sheet{position:fixed;inset:0;background:rgba(22,35,58,.4);display:none;align-items:flex-end;z-index:20}
+  .sheet.on{display:flex}
+  .sheet .box{background:var(--paper-hi);width:100%;border-radius:20px 20px 0 0;padding:20px 18px;
+    padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+  .sheet h3{margin:0 0 4px;font-size:16px}
+  .sheet p{margin:0 0 14px;color:var(--ink-soft);font-size:13.5px}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:6px}
+  .tags button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);font-size:13px;color:var(--ink-soft)}
+  .tags button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .hintline{font-size:11.5px;color:var(--ink-soft);margin:0 0 16px;line-height:1.6}
+  .acts{display:flex;gap:10px}
+  .acts button{flex:1;padding:13px;border-radius:12px;font-size:15px;font-weight:500;border:1px solid var(--line)}
+  .acts .del{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;
+    font-size:13.5px;padding:9px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:30}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ══════ 按 viewport 高度分档 ══════
+     同一套设计，只调间距和尺寸比例。越矮的屏优先压顶部留白、七天格、
+     分类卡高度和区块间距；数字键最后才动，且不低于 50px。
+     页面始终可滚动，没有用 overflow:hidden 裁内容。 */
+  @media (max-height:900px){
+    header{padding:calc(env(safe-area-inset-top) + 10px) 20px 11px}
+    .amount{font-size:45px;margin:10px 0 2px}
+    .week{margin-top:11px}
+    .day i{height:20px}
+    .pane{padding:12px 16px 8px}
+    .cats{gap:7px}
+    .cat{padding:7px 2px 5px}
+    .opt{margin-top:8px}
+    .meta{margin:9px 0 7px}
+    .pad{gap:7px}
+    .save{margin:8px 0 0;padding:14px}
+  }
+  @media (max-height:840px){
+    header{padding:calc(env(safe-area-inset-top) + 9px) 20px 9px}
+    .amount{font-size:41px;margin:9px 0 1px}
+    .sub{min-height:17px}
+    .week{margin-top:10px}
+    .day i{height:16px}
+    .day span{font-size:9px;margin-top:4px}
+    .pane{padding:11px 16px 7px}
+    .cat{padding:6px 2px 4px;font-size:11px}
+    .cat b{font-size:19px;line-height:1.2}
+    .tog{padding:9px;font-size:13px}
+    .meta input{padding:9px 11px;font-size:14.5px}
+    .pad button{padding:13px 0}
+    .save{padding:12px;font-size:15.5px}
+  }
+  @media (max-height:800px){
+    header{padding:calc(env(safe-area-inset-top) + 8px) 20px 9px}
+    .amount{font-size:38px;margin:7px 0 0}
+    .amount .cur{font-size:20px}
+    .sub{min-height:16px;font-size:12px}
+    .week{margin-top:9px}
+    .day i{height:14px}
+    .day span{display:none}
+    .pane{padding:9px 16px 6px}
+    .cats{gap:6px}
+    .cat{padding:5px 2px 4px;font-size:10.5px}
+    .cat b{font-size:17px;line-height:1.15}
+    .tog{padding:8px;font-size:12.5px}
+    .meta{margin:8px 0 7px}
+    .meta input{padding:8px 10px;font-size:14px}
+    .meta input[type=date]{flex:0 0 116px;font-size:13px}
+    .pad{gap:6px}
+    .pad button{padding:12px 0;font-size:21px}
+    .save{margin:7px 0 0;padding:12px;font-size:15px}
+  }
+  @media (max-height:730px){
+    header{padding:calc(env(safe-area-inset-top) + 7px) 20px 8px}
+    .amount{font-size:33px;margin:6px 0 0}
+    .sub{min-height:15px}
+    .week{margin-top:7px}
+    .day i{height:11px}
+    .pane{padding:8px 16px 5px}
+    .cats{gap:5px}
+    .cat{padding:4px 2px 3px;font-size:10px}
+    .cat b{font-size:16px;line-height:1.1}
+    .tog{padding:7px;font-size:12px}
+    .meta{margin:7px 0 6px}
+    .meta input{padding:7px 10px;font-size:13.5px}
+    .pad{gap:5px}
+    .pad button{padding:10px 0;font-size:20px}
+    .save{margin:6px 0 0;padding:11px;font-size:14.5px}
+  }
+  /* 很高的屏：只加留白，不放大按钮 */
+  @media (min-height:940px){
+    .pane{padding:18px 16px 14px}
+    .cats{gap:9px}
+    .meta{margin:14px 0 12px}
+    .pad{gap:9px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div class="seg" role="group" aria-label="收支类型">
+      <button id="tExp" aria-pressed="true">支出</button>
+      <button id="tInc" aria-pressed="false">收入</button>
+    </div>
+    <div class="sub num" id="monthTip"></div>
+  </div>
+  <div class="amount num zero" id="amt"><span class="cur">¥</span><span id="amtV">0.00</span></div>
+  <div class="sub" id="streak">载入中…</div>
+  <div class="week" id="week"></div>
+</header>
+
+<main>
+  <section class="pane on" id="p-add">
+    <div class="cats" id="cats"></div>
+    <div class="opt" id="opt"></div>
+    <div class="meta">
+      <input type="text" id="note" placeholder="备注（可不填）" maxlength="20" enterkeyhint="done">
+      <input type="date" id="date">
+    </div>
+    <div class="pad" id="pad"></div>
+    <button class="save" id="save" disabled>记下这笔</button>
+  </section>
+  <section class="pane" id="p-list"></section>
+  <section class="pane" id="p-stat"></section>
+  <section class="pane" id="p-fund"></section>
+  <section class="pane" id="p-check"></section>
+</main>
+
+<nav>
+  <button data-p="add" aria-pressed="true"><b>✎</b>记一笔</button>
+  <button data-p="list" aria-pressed="false"><b>☰</b>明细</button>
+  <button data-p="stat" aria-pressed="false"><b>◔</b>统计</button>
+  <button data-p="fund" aria-pressed="false"><b>◉</b>资金</button>
+  <button data-p="check" aria-pressed="false"><b>◈</b>体检</button>
+</nav>
+
+<div class="sheet" id="sheet">
+  <div class="box">
+    <h3 id="shTitle">这一笔</h3>
+    <p id="shDesc"></p>
+    <div class="tags" id="shTags"></div>
+    <p class="hintline" id="shHint"></p>
+    <div id="bkWrap"></div>
+    <div class="acts" id="acts">
+      <button id="shCancel">关闭</button>
+      <button class="del" id="shDel">删除</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* 存储垫片：artifact 里用 window.storage，装成 App 后用 localStorage。
+   两处 API 形状保持一致，业务代码不用改。 */
+if(!window.storage){
+  window.storage={
+    async get(k){const v=localStorage.getItem(k); if(v===null) throw new Error('not found'); return {key:k,value:v};},
+    async set(k,v){localStorage.setItem(k,v); return {key:k,value:v};},
+    async delete(k){localStorage.removeItem(k); return {key:k,deleted:true};},
+    async list(p){return {keys:Object.keys(localStorage).filter(x=>!p||x.startsWith(p))};}
+  };
+}
+const KEY='ledger:v1';
+const CATS={
+  expense:[
+    {k:'food',n:'餐饮',e:'🍜',c:'#D4703B'},{k:'trans',n:'交通',e:'🚇',c:'#4C7FA8'},
+    {k:'daily',n:'日用',e:'🧴',c:'#7A9E6E'},{k:'shop',n:'购物',e:'🛍',c:'#B45E86'},
+    {k:'fun',n:'娱乐',e:'🎮',c:'#8A6FBF'},{k:'med',n:'医疗',e:'💊',c:'#4FA3A0'},
+    {k:'home',n:'住房',e:'🏠',c:'#A8813F'},{k:'phone',n:'通讯',e:'📱',c:'#6B7B8C'},
+    {k:'sub',n:'订阅',e:'📺',c:'#5E7F9E'},{k:'repay',n:'还款',e:'💳',c:'#9B5C4E'},
+    {k:'gift',n:'人情',e:'🧧',c:'#C05A5A'},{k:'other',n:'其他',e:'📦',c:'#8C8C86'}
+  ],
+  income:[
+    {k:'salary',n:'工资',e:'💼',c:'#2E7D5B'},{k:'side',n:'外快',e:'🔧',c:'#4C7FA8'},
+    {k:'bonus',n:'奖金',e:'🎯',c:'#A8813F'},{k:'reim',n:'报销',e:'🧾',c:'#7A9E6E'},
+    {k:'redp',n:'红包',e:'🧧',c:'#C05A5A'},{k:'other_i',n:'其他',e:'📥',c:'#8C8C86'}
+  ]
+};
+/* 自动标签规则：用户可在明细里逐笔覆盖 */
+const RULE={food:{need:1},trans:{need:1},daily:{need:1},med:{need:1},
+  home:{fixed:1,need:1},phone:{fixed:1,need:1},sub:{fixed:1},
+  repay:{fixed:1,need:1,debt:1},shop:{},fun:{},gift:{},other:{}};
+const STABLE=['salary','side'];
+const TAGS=[['fixed','固定支出'],['need','必要支出'],['once','一次性'],['debt','债务还款']];
+
+const catOf=k=>[...CATS.expense,...CATS.income].find(c=>c.k===k)||{n:'其他',e:'📦',c:'#8C8C86'};
+const pad2=n=>String(n).padStart(2,'0');
+const key=d=>d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+const money=n=>(Math.round(n*100)/100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d)\.)/g,',');
+const yuan=n=>'¥'+money(n);
+const pct=n=>Math.round(n*100)+'%';
+const $=s=>document.querySelector(s);
+const sum=a=>a.reduce((x,y)=>x+y.amount,0);
+
+/* ── 资金性质 ──
+   type 只表示现金方向；nature 区分性质，缺省即"真实收支"，老数据零改动。
+   nature: undefined 真实 | 'adv' 垫付 | 'reim' 报销到账
+   gid: 垫付=自身 id；报销=所关联垫付的 id（空=无主报销）
+   off: 报销失败，转为个人支出的原因                                   */
+const isRealExp=r=>r.type==='expense'&&(!r.nature||(r.nature==='adv'&&!!r.off));
+const isRealInc=r=>r.type==='income'&&!r.nature;
+const isAdv=r=>r.nature==='adv'&&!r.off;
+function advInfo(a){
+  const got=sum(records.filter(r=>r.nature==='reim'&&r.gid===a.id));
+  return {got,left:a.off?0:Math.max(a.amount-got,0),
+    st:a.off?'off':got>=a.amount?'done':got>0?'partial':'pending'};
+}
+const advOpen=()=>records.filter(isAdv).map(a=>Object.assign({a},advInfo(a))).filter(x=>x.left>0)
+  .sort((x,y)=>x.a.date.localeCompare(y.a.date));
+const owed=()=>advOpen().reduce((s,x)=>s+x.left,0);
+const KW=/垫|报销|出差|差旅|公司|客户|代付|备用金|驻场|项目/;
+const advCands=()=>records.filter(r=>r.type==='expense'&&!r.nature&&!r.nadv&&KW.test(r.note||''));
+
+/* 资金桶默认值。必要支出与应急储备不在这里——它们在"可支配资金"之上就已经扣掉，
+   放进桶会把同一笔钱算两次。 */
+const DEFBK=[{id:'b_save',name:'储蓄',emoji:'🏦',pct:40},
+  {id:'b_inv',name:'投资',emoji:'📈',pct:20},
+  {id:'b_free',name:'自由消费',emoji:'🎈',pct:30},
+  {id:'b_spare',name:'备用',emoji:'🧰',pct:10}];
+const DEFSET={needMo:1,reserveMo:3};
+
+let records=[], budget=0, cashBase=0, cashAt='', migrated=0,
+    buckets=[], allocs=[], settings=Object.assign({},DEFSET),
+    type='expense', cat=null, raw='', advOn=false;
+
+/* 现金不再手填：填一次基准余额，之后按流水自动加减。
+   现金方向就是 type，垫付/报销同样影响余额。 */
+const flowSince=d=>records.filter(r=>r.date>d).reduce((s,r)=>s+(r.type==='income'?r.amount:-r.amount),0);
+const cashNow=()=>cashBase+(cashAt?flowSince(cashAt):0);
+const bkOf=id=>buckets.find(b=>b.id===id);
+const bkBal=id=>allocs.filter(a=>a.bid===id).reduce((s,a)=>s+a.amount,0)
+  -records.filter(r=>r.bk===id&&r.type==='expense').reduce((s,r)=>s+r.amount,0);
+const bkTotal=()=>buckets.reduce((s,b)=>s+bkBal(b.id),0);
+const pctSum=()=>buckets.reduce((s,b)=>s+(+b.pct||0),0);
+
+async function load(){
+  try{
+    const d=JSON.parse((await window.storage.get(KEY)).value);
+    records=d.records||[]; budget=d.budget||0; migrated=d.migrated||0;
+    cashBase=d.cashBase!==undefined?d.cashBase:(d.cash||0);   // 老字段 cash 即当时余额，语义一致
+    cashAt=d.cashAt||'';
+    buckets=(d.buckets&&d.buckets.length)?d.buckets:DEFBK.map(b=>Object.assign({},b));
+    allocs=d.allocs||[]; settings=Object.assign({},DEFSET,d.settings||{});
+  }catch(e){}
+  if(!migrated){
+    /* 老数据里「报销」是当作收入记的。标成 reim：保留在现金流里，但不再算作真实收入。 */
+    let n=0;
+    records.forEach(r=>{ if(r.type==='income'&&r.cat==='reim'&&!r.nature){r.nature='reim';r.gid='';n++;} });
+    migrated=1; await save();
+    if(n) setTimeout(()=>toast(`已把 ${n} 笔历史报销移出真实收入`),600);
+  }
+  renderAll();
+}
+async function save(){
+  try{ await window.storage.set(KEY,JSON.stringify(
+    {records,budget,cashBase,cashAt,migrated,buckets,allocs,settings})); }
+  catch(e){ toast('没存上，再试一次'); }
+}
+
+/* ── 标签判定 ── */
+let catAvg={},allAvg=0;
+const med=a=>{if(!a.length)return 0;const s=[...a].sort((x,y)=>x-y),i=s.length>>1;
+  return s.length%2?s[i]:(s[i-1]+s[i])/2;};
+function calcAvg(){
+  /* 用中位数当基准：均值会被要检测的那笔大额自己拉高，导致漏判 */
+  const exp=records.filter(isRealExp);
+  allAvg=med(exp.map(r=>r.amount)); catAvg={};
+  const g={}; exp.forEach(r=>(g[r.cat]=g[r.cat]||[]).push(r.amount));
+  for(const k in g) catAvg[k]=g[k].length>=3?med(g[k]):null;
+}
+function flags(r){
+  const f=Object.assign({fixed:0,need:0,debt:0,once:0},RULE[r.cat]||{});
+  if(!f.fixed){
+    const base=catAvg[r.cat]||allAvg||r.amount;
+    if(r.amount>=300&&r.amount>=base*4) f.once=1;
+  }
+  return Object.assign(f,r.ov||{});
+}
+const isStable=r=>r.ov&&'once'in r.ov?!r.ov.once:STABLE.includes(r.cat);
+
+/* ── 顶部 ── */
+function streakDays(){
+  const s=new Set(records.map(r=>r.date)); const d=new Date(); let n=0;
+  if(!s.has(key(d))) d.setDate(d.getDate()-1);
+  while(s.has(key(d))){n++;d.setDate(d.getDate()-1);} return n;
+}
+function renderHead(){
+  const today=key(new Date());
+  const tn=records.filter(r=>r.date===today).length, n=streakDays();
+  $('#streak').textContent=!records.length?'第一笔，从今天这杯咖啡开始'
+    :tn?`连着记了 ${n} 天 · 今天已记 ${tn} 笔`
+    :n?`连着记了 ${n} 天 · 今天还没记`:'断了几天，今天接上就是';
+  const ym=today.slice(0,7);
+  $('#monthTip').textContent='本月 '+yuan(sum(records.filter(r=>isRealExp(r)&&r.date.startsWith(ym))));
+  const s=new Set(records.map(r=>r.date)),W=['日','一','二','三','四','五','六'];
+  $('#week').innerHTML=[...Array(7)].map((_,i)=>{
+    const d=new Date(); d.setDate(d.getDate()-(6-i)); const k=key(d);
+    return `<div class="day ${s.has(k)?'on':''} ${k===today?'today':''}" data-k="${k}"><i></i><span>${W[d.getDay()]}</span></div>`;
+  }).join('');
+}
+
+/* ── 记一笔 ── */
+function renderCats(){
+  $('#cats').innerHTML=CATS[type].map(c=>
+    `<button class="cat" data-k="${c.k}" aria-pressed="${cat===c.k}"><b>${c.e}</b>${c.n}</button>`).join('');
+}
+function renderAmt(){
+  const v=parseFloat(raw)||0; let t='0.00';
+  if(raw&&raw!=='.'){ if(raw.includes('.')){const [a,b]=raw.split('.');t=(a||'0')+'.'+b.padEnd(2,'0').slice(0,2);} else t=raw+'.00'; }
+  $('#amtV').textContent=t; $('#amt').classList.toggle('zero',!v); $('#save').disabled=!(v>0&&cat);
+}
+$('#pad').innerHTML=['1','2','3','4','5','6','7','8','9','.','0','⌫'].map(k=>`<button data-k="${k}">${k}</button>`).join('');
+$('#pad').onclick=e=>{
+  const b=e.target.closest('button'); if(!b) return; const k=b.dataset.k;
+  if(k==='⌫') raw=raw.slice(0,-1);
+  else if(k==='.'){ if(!raw.includes('.')) raw=(raw||'0')+'.'; }
+  else{
+    if(raw.includes('.')&&raw.split('.')[1].length>=2) return;
+    if(!raw.includes('.')&&raw.length>=7) return;
+    raw=(raw==='0'?'':raw)+k;
+  }
+  renderAmt();
+};
+function renderOpt(){
+  const el=$('#opt');
+  if(type==='expense'){
+    el.innerHTML=`<button class="tog" id="advTog" aria-pressed="${advOn}">工作垫付 · 之后要报销${advOn?' ✓':''}</button>`;
+    $('#advTog').onclick=()=>{advOn=!advOn;renderOpt();};
+  }else if(cat==='reim'){
+    const op=advOpen();
+    el.innerHTML=op.length?`<select id="linkSel">`+
+      op.map((x,i)=>`<option value="${x.a.id}" ${i===0?'selected':''}>关联：${x.a.date.slice(5)} ${catOf(x.a.cat).n} 待收 ${yuan(x.left)}</option>`).join('')+
+      `<option value="">不关联具体垫付</option></select>`
+      :`<div style="font-size:12.5px;color:var(--ink-soft);padding:2px">没有待报销的垫付记录，这笔会记为无主报销：算进现金流，不算真实收入。</div>`;
+  }else el.innerHTML='';
+}
+$('#cats').onclick=e=>{const b=e.target.closest('.cat'); if(!b)return; cat=cat===b.dataset.k?null:b.dataset.k;
+  renderCats(); renderOpt(); renderAmt();};
+function setType(t){type=t;cat=null;advOn=false;$('#tExp').setAttribute('aria-pressed',t==='expense');
+  $('#tInc').setAttribute('aria-pressed',t==='income');renderCats();renderOpt();renderAmt();}
+$('#tExp').onclick=()=>setType('expense'); $('#tInc').onclick=()=>setType('income');
+$('#save').onclick=async()=>{
+  const amount=Math.round((parseFloat(raw)||0)*100)/100; if(!(amount>0)||!cat) return;
+  const d=$('#date').value||key(new Date());
+  const id=Date.now()+''+Math.random().toString(36).slice(2,6);
+  const rec={id,amount,type,cat,note:$('#note').value.trim(),date:d,ts:Date.now()};
+  if(type==='expense'&&advOn){rec.nature='adv';rec.gid=id;}
+  if(type==='income'&&cat==='reim'){rec.nature='reim';rec.gid=($('#linkSel')||{}).value||'';}
+  records.push(rec);
+  raw=''; $('#note').value=''; advOn=false; renderOpt();
+  $('#amt').classList.add('pop'); setTimeout(()=>{$('#amt').classList.remove('pop');renderAmt();},190);
+  await save(); renderAll();
+  const cell=document.querySelector(`.day[data-k="${d}"]`); if(cell) cell.classList.add('flash');
+  toast(rec.nature==='adv'?'记为垫付 · '+yuan(amount)+'，待报销'
+    :rec.nature==='reim'?(rec.gid?'报销已冲抵 · '+yuan(amount):'记为报销 · '+yuan(amount))
+    :'记下了 · '+yuan(amount));
+};
+
+/* ── 明细 ── */
+function renderList(){
+  const el=$('#p-list');
+  if(!records.length){el.innerHTML='<div class="empty"><b>还没有一笔</b>回到「记一笔」，三秒就好</div>';return;}
+  const by={};
+  [...records].sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts).forEach(r=>(by[r.date]=by[r.date]||[]).push(r));
+  const today=key(new Date()); const y=new Date(); y.setDate(y.getDate()-1);
+  const cd=advCands();
+  const rev=cd.length?`<div class="rev"><h4>这 ${cd.length} 笔备注像工作垫付</h4>
+    <p>只是按备注关键词挑出来的候选，没有改动任何数据。确认后它们会移出个人消费，转为待报销。</p>`+
+    cd.slice(0,6).map(r=>`<div class="cd"><span>${r.date.slice(5)} ${catOf(r.cat).n} ${yuan(r.amount)} · ${r.note}</span>
+      <button class="y" data-adv="${r.id}">是垫付</button><button data-nadv="${r.id}">不是</button></div>`).join('')+'</div>':'';
+  el.innerHTML=rev+Object.entries(by).map(([d,rs])=>{
+    const out=sum(rs.filter(isRealExp));
+    const label=d===today?'今天':d===key(y)?'昨天':d.slice(5).replace('-','月')+'日';
+    return `<div class="dgroup"><div class="dhead"><span>${label}</span><span class="num">支出 ${yuan(out)}</span></div>`+
+      rs.map(r=>{const c=catOf(r.cat),f=flags(r);
+        let bd='';
+        if(r.nature==='adv'){const i=advInfo(r);
+          bd=`<span class="badge ${i.st==='done'?'done':i.st==='off'?'off':''}">${
+            i.st==='done'?'已报销':i.st==='off'?'自己承担':i.st==='partial'?'待收 '+yuan(i.left):'待报销'}</span>`;}
+        else if(r.nature==='reim') bd='<span class="badge">报销到账</span>';
+        if(r.bk&&bkOf(r.bk)) bd+=`<span class="badge">${bkOf(r.bk).emoji}${bkOf(r.bk).name}</span>`;
+        const mk=[f.fixed&&'固定',f.once&&'一次性',f.debt&&'还款'].filter(Boolean).join(' · ');
+        return `<button class="item" data-id="${r.id}"><span class="dot" style="background:${c.c}1F">${c.e}</span>
+        <span class="t"><b>${c.n}${bd}</b><small>${r.note||mk||'—'}${r.note&&mk?' · '+mk:''}</small></span>
+        <span class="v num ${r.type==='income'?'in':''}">${r.type==='income'?'+':'−'}${money(r.amount)}</span></button>`}).join('')+'</div>';
+  }).join('');
+}
+let pending=null;
+$('#p-list').onclick=async e=>{
+  const yes=e.target.closest('[data-adv]'), no=e.target.closest('[data-nadv]');
+  if(yes||no){
+    const id=(yes||no).dataset.adv||(no).dataset.nadv;
+    const r=records.find(x=>x.id===id); if(!r) return;
+    if(yes){r.nature='adv';r.gid=r.id;} else r.nadv=1;
+    await save(); renderAll(); toast(yes?'已转为垫付':'知道了');
+    return;
+  }
+  const b=e.target.closest('.item'); if(!b) return;
+  pending=records.find(r=>r.id===b.dataset.id); if(!pending) return;
+  openSheet();
+};
+const OFFR=['公司不予报销','超出报销额度','我主动承担','其他'];
+function openSheet(mode){
+  const r=pending,c=catOf(r.cat),f=flags(r);
+  $('#bkWrap').innerHTML='';
+  $('#shDesc').textContent=`${r.date} · ${c.n} ${yuan(r.amount)}${r.note?' · '+r.note:''}`;
+  $('#acts').innerHTML='<button id="shCancel">关闭</button><button class="del" id="shDel">删除</button>';
+  if(r.nature==='adv'){
+    const i=advInfo(r);
+    $('#shTitle').textContent='这笔垫付';
+    if(mode==='off'){
+      $('#shTags').innerHTML=OFFR.map(x=>`<button data-off="${x}">${x}</button>`).join('');
+      $('#shHint').textContent='选一个原因。转换后这笔会计入个人真实消费，从待报销里移除。';
+    }else{
+      $('#shTags').innerHTML='';
+      $('#shHint').innerHTML=r.off?`已按「${r.off}」转为个人支出，计入真实消费。`
+        :`垫付 ${yuan(r.amount)}，已收回 ${yuan(i.got)}，待收回 <b>${yuan(i.left)}</b>。
+          垫付不算个人消费，但占用现金；收回前它一直在体检的「待报销」里。`;
+      if(!r.off&&i.left>0) $('#acts').insertAdjacentHTML('afterbegin',
+        `<button id="shGot">已全额收回</button><button id="shOff">报销不了</button>`);
+    }
+    bindSheet(); $('#sheet').classList.add('on'); return;
+  }
+  if(r.nature==='reim'){
+    const src=records.find(x=>x.id===r.gid);
+    $('#shTitle').textContent='这笔报销到账';
+    $('#shTags').innerHTML='';
+    $('#shHint').textContent=src?`冲抵 ${src.date.slice(5)} 那笔 ${catOf(src.cat).n} 垫付。不计入真实收入，只影响现金流。`
+      :'无主报销：算进现金流，不计入真实收入，也不冲抵任何垫付。';
+    bindSheet(); $('#sheet').classList.add('on'); return;
+  }
+  $('#shTitle').textContent='这一笔';
+  if(r.type==='expense'){
+    const bl=buckets.filter(b=>bkBal(b.id)>0||r.bk===b.id);
+    $('#bkWrap').innerHTML=bl.length?
+      `<div class="tags" id="bkSel" style="margin-bottom:6px">
+        <button data-bk="" aria-pressed="${!r.bk}">不指定来源</button>`+
+       bl.map(b=>`<button data-bk="${b.id}" aria-pressed="${r.bk===b.id}">${b.emoji} ${b.name}</button>`).join('')+
+      `</div><p class="hintline">指定后这笔会从该方向的余额里扣掉。日常消费不用管，买目标物品时再指定。</p>`:'';
+  }
+  if(r.type==='expense'){
+    $('#shTags').innerHTML=TAGS.map(([k,n])=>`<button data-f="${k}" aria-pressed="${!!f[k]}">${n}</button>`).join('');
+    $('#shHint').textContent=r.ov?'已手动调整过标签。':'标签由分类和金额自动判断，点一下可以改。这些标签只影响「体检」的判断。';
+  }else{
+    $('#shTags').innerHTML=`<button data-f="once" aria-pressed="${r.ov&&r.ov.once?true:!STABLE.includes(r.cat)}">一次性收入</button>`;
+    $('#shHint').textContent='标为一次性的收入不计入「稳定收入」，避免高估长期负担能力。';
+  }
+  const bs=$('#bkSel');
+  if(bs) bs.onclick=async e=>{
+    const b=e.target.closest('[data-bk]'); if(!b||!pending) return;
+    pending.bk=b.dataset.bk||undefined;
+    await save(); renderAll(); openSheet();
+  };
+  bindSheet(); $('#sheet').classList.add('on');
+}
+function bindSheet(){
+  $('#shCancel').onclick=()=>{$('#sheet').classList.remove('on');pending=null;};
+  $('#shDel').onclick=async()=>{
+    const gone=pending.id;
+    records=records.filter(r=>r.id!==gone);
+    if(pending.nature==='adv') records.forEach(r=>{if(r.gid===gone)r.gid='';});
+    $('#sheet').classList.remove('on'); pending=null; await save(); renderAll(); toast('已删除');
+  };
+  const g=$('#shGot'); if(g) g.onclick=async()=>{
+    const i=advInfo(pending);
+    records.push({id:Date.now()+''+Math.random().toString(36).slice(2,6),amount:i.left,type:'income',
+      cat:'reim',note:'收回垫付',date:key(new Date()),ts:Date.now(),nature:'reim',gid:pending.id});
+    $('#sheet').classList.remove('on'); pending=null; await save(); renderAll(); toast('已记为收回');
+  };
+  const o=$('#shOff'); if(o) o.onclick=()=>openSheet('off');
+}
+$('#shTags').onclick=async e=>{
+  const b=e.target.closest('button'); if(!b||!pending) return;
+  if(b.dataset.off){
+    pending.off=b.dataset.off; $('#sheet').classList.remove('on'); pending=null;
+    await save(); renderAll(); toast('已转为个人支出'); return;
+  }
+  const k=b.dataset.f, cur=b.getAttribute('aria-pressed')==='true';
+  pending.ov=Object.assign({},pending.ov,{[k]:cur?0:1});
+  await save(); calcAvg(); openSheet(); renderList();
+  if($('#p-check').classList.contains('on')) renderCheck();
+};
+$('#sheet').onclick=e=>{if(e.target===$('#sheet')&&pending){$('#sheet').classList.remove('on');pending=null;}};
+
+/* ── 统计 ── */
+let mOff=0;
+function renderStat(){
+  const base=new Date(); base.setDate(1); base.setMonth(base.getMonth()-mOff);
+  const ym=base.getFullYear()+'-'+pad2(base.getMonth()+1);
+  const rs=records.filter(r=>r.date.startsWith(ym));
+  const out=rs.filter(isRealExp),total=sum(out),income=sum(rs.filter(isRealInc));
+  const advM=sum(rs.filter(isAdv));
+  const days=new Date(base.getFullYear(),base.getMonth()+1,0).getDate();
+  const now=new Date(),cur=ym===key(now).slice(0,7),past=cur?now.getDate():days;
+  const s={}; out.forEach(r=>s[r.cat]=(s[r.cat]||0)+r.amount);
+  const rank=Object.entries(s).sort((a,b)=>b[1]-a[1]);
+  const daily=[...Array(days)].map((_,i)=>sum(out.filter(r=>+r.date.slice(8)===i+1)));
+  const mx=Math.max(...daily,1);
+  let bud='';
+  if(cur){
+    const fc=total/past*days;
+    bud=budget>0?`<div class="bud"><div class="r1"><span>本月预算 ${yuan(budget)}</span><span class="num">第 ${past} / ${days} 天</span></div>
+      <div class="big num">已花 ${yuan(total)}</div>
+      <div class="gauge"><i class="${total>budget?'over':''}" style="width:${Math.min(total/budget*100,100)}%"></i>
+      <span class="mark" style="left:${past/days*100}%"></span></div>
+      <div class="r2 num">白线是时间进度 · ${total>budget?'超出 '+yuan(total-budget)
+        :'剩 '+yuan(budget-total)+(days>past?` · 后 ${days-past} 天每天 ${yuan((budget-total)/(days-past))}`:'')}</div>
+      <div class="set"><input type="number" inputmode="decimal" id="budIn" placeholder="改成…"><button id="budSet">保存</button></div></div>`
+      :`<div class="bud"><div class="r1"><span>本月已花</span><span class="num">第 ${past} / ${days} 天</span></div>
+      <div class="big num">${yuan(total)}</div>
+      <div class="r2">按现在的速度，月底大约 ${yuan(fc)}。设个预算，这里会变成进度条。</div>
+      <div class="set"><input type="number" inputmode="decimal" id="budIn" placeholder="预算金额"><button id="budSet">设定</button></div></div>`;
+  }
+  $('#p-stat').innerHTML=bud+`<div class="mnav"><button id="mPrev">←</button>
+    <strong>${base.getFullYear()} 年 ${base.getMonth()+1} 月</strong>
+    <button id="mNext" ${mOff===0?'disabled style="opacity:.35"':''}>→</button></div>`+
+    (!rs.length?'<div class="empty"><b>这个月是空的</b>记一笔，这里就有东西看了</div>':`
+    <div class="total num">${yuan(total)}</div>
+    <div class="num" style="color:var(--ink-soft);font-size:13px">日均 ${yuan(total/past)} · 共 ${out.length} 笔${income?' · 收入 '+yuan(income):''}</div>
+    ${advM?`<div style="color:var(--ink-soft);font-size:12.5px;margin-top:3px">另有垫付 ${yuan(advM)} 未计入（不是个人消费）</div>`:''}
+    <div class="cols">${daily.map(v=>`<i style="height:${Math.max(v/mx*100,2)}%"></i>`).join('')}</div>
+    <div style="font-size:12px;color:var(--ink-soft);display:flex;justify-content:space-between"><span>1 日</span><span>${days} 日</span></div>
+    <div style="margin-top:18px">${rank.map(([k,v])=>{const c=catOf(k);return `<div class="bar">
+      <div class="l"><span>${c.e} ${c.n}</span><span class="num">${yuan(v)} · ${Math.round(v/total*100)}%</span></div>
+      <div class="track"><i style="width:${v/total*100}%;background:${c.c}"></i></div></div>`}).join('')}</div>`);
+  $('#mPrev').onclick=()=>{mOff++;renderStat()};
+  $('#mNext').onclick=()=>{if(mOff>0){mOff--;renderStat()}};
+  const bs=$('#budSet'); if(bs) bs.onclick=async()=>{
+    const v=parseFloat($('#budIn').value); if(!(v>0)){toast('填个大于 0 的数');return;}
+    budget=Math.round(v*100)/100; await save(); renderStat(); toast('预算已设为 '+yuan(budget));
+  };
+}
+
+
+/* ══════ 资金 ══════ */
+const BKC=['#E8B93B','#5E7F9E','#7A9E6E','#B45E86','#8A6FBF','#D4703B','#4FA3A0','#A8813F'];
+function renderFund(){
+  const el=$('#p-fund'), D=disposable(), neg=D.total<0;
+  if(!cashAt){
+    el.innerHTML=`<div class="empty"><b>先告诉我卡里有多少钱</b>
+      填一次此刻的可动用余额（活期、微信、支付宝、现金加总，不含房产和取不出来的投资）。
+      之后每记一笔账，程序会自己加减，不用你再维护。</div>
+      <div class="setup"><label>当前可动用余额</label>
+      <small>填此刻的实际数。今天已经记过的账不会被重复计算。</small>
+      <div class="row"><input type="number" inputmode="decimal" id="cbIn" placeholder="例如 30000">
+        <button id="cbSet">开始</button></div></div>`;
+    $('#cbSet').onclick=setCash; return;
+  }
+  const ps=pctSum(), gap=Math.abs(ps-100)>0.01;
+  el.innerHTML=`
+  <div class="cashcard">
+    <div class="lb">💰 可支配资金</div>
+    <div class="big num ${neg?'neg':''}">${yuan(D.total)}</div>
+    <div class="hint">${neg?'预留和已分配的钱加起来超过了现有现金。先看下面哪一项定得过高，或者补充现金。'
+      :'这是扣掉预留、应急和已经攒起来的钱之后，你真正可以自由安排的部分。'}</div>
+    <div class="brk">
+      ${D.rows.map((r,i)=>`<div class="ln"><span>${r[0]}</span>
+        <span class="num">${i===0?'':r[1]<0?'−':'+'}${yuan(Math.abs(r[1]))}</span></div>`).join('')}
+      <div class="ln tot"><span>可支配资金</span><span class="num">${yuan(D.total)}</span></div>
+    </div>
+    <div class="hint">账户现金按你 ${cashAt} 填的基准 ${yuan(cashBase)} 加减此后的流水推算。
+      和实际对不上就点下面的重新校准。</div>
+  </div>
+
+  <h3 class="sec">资金分配</h3>
+  ${gap?`<div class="warnbar">各方向加起来是 ${ps.toFixed(0)}%，不是 100%。差 ${(100-ps).toFixed(0)}% 没有安排。</div>`:''}
+  <div class="split">${buckets.map((b,i)=>`<i style="width:${Math.max(b.pct,0)}%;background:${BKC[i%8]}"></i>`).join('')}</div>
+  ${buckets.map((b,i)=>{
+    const bal=bkBal(b.id), share=D.total>0?D.total*b.pct/100:0;
+    return `<div class="bk" data-b="${b.id}">
+      <div class="t"><span style="font-size:19px">${b.emoji}</span><b>${b.name}</b>
+        <span class="amt num">${yuan(bal)}</span></div>
+      <div class="pc"><input type="number" inputmode="decimal" class="pctIn" value="${b.pct}" data-b="${b.id}">
+        <span>% · 本次可划 ${yuan(share)}</span>
+        <button data-add="${b.id}">单独划入</button>
+        <button data-del="${b.id}">删</button></div>
+      ${b.goal?`<div class="goal"><div class="gl"><span>目标 ${yuan(b.goal)}</span>
+        <span>${Math.min(Math.round(bal/b.goal*100),999)}%</span></div>
+        <div class="track"><i style="width:${Math.min(bal/b.goal*100,100)}%;background:${BKC[i%8]}"></i></div></div>`
+        :`<div class="pc"><button data-goal="${b.id}">设个目标金额</button></div>`}
+    </div>`}).join('')}
+  <button class="bigbtn ghost" id="addBk">＋ 添加方向</button>
+  <button class="bigbtn" id="doAlloc">按比例划账</button>
+  <div class="foot">划账只是给钱贴标签，不动你卡里的余额。划进去的部分不再算作可支配资金，
+    避免同一笔钱被安排两次。真的花掉时，在明细里点开那笔支出，指定它从哪个方向出。</div>
+
+  <h3 class="sec">参数</h3>
+  <div class="setup">
+    <label>现金校准</label>
+    <small>推算值 ${yuan(cashNow())}。和银行卡实际对不上时，填实际数字重新校准。</small>
+    <div class="row"><input type="number" inputmode="decimal" id="cbIn" placeholder="实际余额">
+      <button id="cbSet">校准</button></div>
+  </div>
+  <div class="setup" style="margin-top:10px">
+    <label>预留月数</label>
+    <small>月均必要支出 ${yuan(D.need)}。必要支出预留是下个月的开销，应急储备是断收入时的缓冲——
+      应急月数同时决定体检里「现金安全」的合格线。</small>
+    <div class="row" style="gap:10px">
+      <div style="flex:1"><div style="font-size:12px;color:var(--ink-soft);margin-bottom:4px">必要支出</div>
+        <input type="number" inputmode="numeric" id="nmIn" value="${settings.needMo}"></div>
+      <div style="flex:1"><div style="font-size:12px;color:var(--ink-soft);margin-bottom:4px">应急储备</div>
+        <input type="number" inputmode="numeric" id="rmIn" value="${settings.reserveMo}"></div>
+      <button id="moSet" style="align-self:flex-end">保存</button></div>
+  </div>`;
+  bindFund(D);
+}
+
+async function setCash(){
+  const v=parseFloat($('#cbIn').value);
+  if(!(v>=0)){toast('填个数字');return;}
+  cashBase=Math.round(v*100)/100; cashAt=key(new Date());
+  await save(); renderFund(); toast('已校准为 '+yuan(cashBase));
+}
+function bindFund(D){
+  $('#cbSet').onclick=setCash;
+  $('#moSet').onclick=async()=>{
+    settings.needMo=Math.max(0,parseInt($('#nmIn').value)||0);
+    settings.reserveMo=Math.max(0,parseInt($('#rmIn').value)||0);
+    await save(); renderFund(); toast('已保存');
+  };
+  $('#p-fund').querySelectorAll('.pctIn').forEach(inp=>inp.onchange=async()=>{
+    const b=bkOf(inp.dataset.b); if(!b) return;
+    b.pct=Math.max(0,Math.min(100,parseFloat(inp.value)||0));
+    await save(); renderFund();
+  });
+  $('#addBk').onclick=async()=>{
+    const n=prompt('这个方向叫什么？比如 换手机、旅游、学习'); if(!n) return;
+    buckets.push({id:'b_'+Date.now().toString(36),name:n.trim().slice(0,8),emoji:'🎯',pct:0});
+    await save(); renderFund(); toast('加好了，记得给它分个百分比');
+  };
+  $('#p-fund').onclick=async e=>{
+    const g=e.target.closest('[data-goal]'), a=e.target.closest('[data-add]'), d=e.target.closest('[data-del]');
+    if(g){const b=bkOf(g.dataset.goal); const v=parseFloat(prompt('目标金额是多少？'));
+      if(v>0){b.goal=v; await save(); renderFund();} return;}
+    if(a){const b=bkOf(a.dataset.add); const v=parseFloat(prompt(`划多少进「${b.name}」？`));
+      if(v>0){allocs.push({id:'a'+Date.now().toString(36),bid:b.id,amount:v,date:key(new Date()),ts:Date.now()});
+        await save(); renderFund(); toast('已划入 '+yuan(v));} return;}
+    if(d){const b=bkOf(d.dataset.del);
+      if(bkBal(b.id)>0){toast('里面还有钱，先划出或花掉再删');return;}
+      buckets=buckets.filter(x=>x.id!==b.id); allocs=allocs.filter(x=>x.bid!==b.id);
+      await save(); renderFund(); return;}
+  };
+  $('#doAlloc').onclick=async()=>{
+    if(D.total<=0){toast('可支配资金不是正数，没得划');return;}
+    if(Math.abs(pctSum()-100)>0.01){toast('百分比先凑够 100%');return;}
+    const raw=prompt(`这次划多少？留空就按全部可支配资金 ${money(D.total)} 分`,money(D.total));
+    if(raw===null) return;
+    const amt=raw.trim()===''?D.total:parseFloat(raw);
+    if(!(amt>0)){toast('金额不对');return;}
+    if(amt>D.total+0.01&&!confirm(`要划的 ${yuan(amt)} 超过可支配资金 ${yuan(D.total)}，还要继续吗？`)) return;
+    const d=key(new Date()), t=Date.now();
+    buckets.forEach((b,i)=>{ const v=Math.round(amt*b.pct)/100;
+      if(v>0) allocs.push({id:'a'+t.toString(36)+i,bid:b.id,amount:v,date:d,ts:t}); });
+    await save(); renderFund(); toast('已按比例划完');
+  };
+}
+
+/* ══════ 财务体检 ══════ */
+const prevYM=(ym,k=1)=>{const [y,m]=ym.split('-').map(Number);const d=new Date(y,m-1-k,1);
+  return d.getFullYear()+'-'+pad2(d.getMonth()+1);};
+function mstat(m){
+  const rs=records.filter(r=>r.date.startsWith(m));
+  /* 真实收支：垫付不算消费，报销不算收入；核销掉的垫付回到真实消费 */
+  const exp=rs.filter(isRealExp), inc=rs.filter(isRealInc);
+  const advRs=rs.filter(isAdv), reimRs=rs.filter(r=>r.nature==='reim');
+  const advOut=sum(advRs), reimIn=sum(reimRs);
+  const byCat={}; exp.forEach(r=>byCat[r.cat]=(byCat[r.cat]||0)+r.amount);
+  const F=r=>flags(r);
+  return {m,n:rs.length,exp:sum(exp),inc:sum(inc),advOut,reimIn,
+    cashFlow:sum(inc)+reimIn-sum(exp)-advOut,
+    stable:sum(inc.filter(isStable)), oneInc:sum(inc.filter(r=>!isStable(r))),
+    fixed:sum(exp.filter(r=>F(r).fixed)), debt:sum(exp.filter(r=>F(r).debt)),
+    need:sum(exp.filter(r=>F(r).need&&!F(r).once)), once:sum(exp.filter(r=>F(r).once)),
+    onceRs:exp.filter(r=>F(r).once), byCat, rs, expRs:exp};
+}
+const worst=(a,b)=>({n:0,g:1,y:2,r:3}[a]>={n:0,g:1,y:2,r:3}[b]?a:b);
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+
+function avgNeedMonthly(){
+  const nowYM=key(new Date()).slice(0,7);
+  const has=m=>records.some(r=>r.date.startsWith(m));
+  let P=prevYM(nowYM,1); if(!has(P))P=nowYM;
+  const ms=[P,...[1,2,3].map(k=>prevYM(P,k))].filter(has).map(mstat);
+  return avg(ms.map(x=>x.need));
+}
+/* 可支配资金：现金里真正还没有归属的部分 */
+function disposable(){
+  const need=avgNeedMonthly();
+  const rows=[
+    ['账户现金',cashNow()],
+    ['待报销',-owed()],
+    [`必要支出预留 ${settings.needMo} 个月`,-need*settings.needMo],
+    [`应急储备 ${settings.reserveMo} 个月`,-need*settings.reserveMo],
+    ['各桶已累计',-bkTotal()]
+  ];
+  return {rows,total:rows.reduce((s,r)=>s+r[1],0),need};
+}
+function analyze(){
+  calcAvg();
+  const nowYM=key(new Date()).slice(0,7);
+  const has=m=>records.some(r=>r.date.startsWith(m));
+  let P=prevYM(nowYM,1), partial=false;
+  if(!has(P)){ P=nowYM; partial=true; }
+  const cur=mstat(P);
+  const prior=[1,2,3].map(k=>prevYM(P,k)).filter(has).map(mstat);
+  const stableInc=avg([cur,...prior].filter(s=>s.inc>0).map(s=>s.stable))||cur.stable;
+  const avgNeed=avgNeedMonthly()||cur.need;
+  const checks=[], issues=[];
+  const cashCur=cashNow(), RM=settings.reserveMo||3;
+  const L=(m)=>m.split('-')[1].replace(/^0/,'')+' 月';
+
+  /* ① 收支健康 */
+  const bal=cur.inc-cur.exp, rate=cur.inc>0?bal/cur.inc:null;
+  let c1={k:'收支健康',lp:'n',v:'缺收入记录',d:'本期没有收入记录，无法判断收入是否覆盖支出。把工资、外快也记进来，这一项才有意义。'};
+  if(cur.inc>0){
+    let deficit=0,mm=P;
+    while(has(mm)){const s=mstat(mm); if(s.inc>0&&s.inc-s.exp<0){deficit++;mm=prevYM(mm,1);}else break;}
+    if(bal<0&&deficit>=2) c1={k:'收支健康',lp:'r',v:'连续 '+deficit+' 期赤字',
+      d:`已经连续 <b>${deficit}</b> 个月支出大于收入，本期缺口 <b>${yuan(-bal)}</b>。这不是波动，是当前的收支结构撑不住。`};
+    else if(bal<0){
+      const priorOK=prior.filter(s=>s.inc>0), explained=cur.once>=-bal&&priorOK.length&&priorOK.every(s=>s.inc-s.exp>0);
+      c1={k:'收支健康',lp:explained?'g':'y',v:'本期缺口 '+yuan(-bal),
+        d:`收入 ${yuan(cur.inc)}，支出 ${yuan(cur.exp)}，缺口 <b>${yuan(-bal)}</b>。`+
+          (explained?`本期一次性支出 ${yuan(cur.once)}，已经足以解释这个缺口，而前 ${priorOK.length} 期都是正结余。属于单次大额消费，不是收支结构出问题。`
+            :cur.once>=-bal?`其中一次性支出 ${yuan(cur.once)} 可以解释缺口，但之前也出现过赤字，要往下看。`
+            :'一次性支出不足以解释缺口，需要看下面的专项检查。')};
+    }
+    else if(rate<0.1) c1={k:'收支健康',lp:'y',v:'结余率 '+pct(rate),
+      d:`结余 <b>${yuan(bal)}</b>，只占收入 ${pct(rate)}。没有亏，但缓冲很薄，一次意外就会转负。`};
+    else{
+      const pr=prior.filter(s=>s.inc>0).map(s=>(s.inc-s.exp)/s.inc);
+      const drop=pr.length&&avg(pr)-rate>=0.15;
+      c1=drop?{k:'收支健康',lp:'y',v:'结余率 '+pct(rate)+'（下降）',
+        d:`结余 <b>${yuan(bal)}</b>，结余率 ${pct(rate)}，低于前几期的 ${pct(avg(pr))}。还是正的，但在往下走。`}
+        :{k:'收支健康',lp:'g',v:'结余率 '+pct(rate),
+        d:`收入 ${yuan(cur.inc)}，支出 ${yuan(cur.exp)}，结余 <b>${yuan(bal)}</b>。收入能覆盖支出并留下余量。`};
+    }
+  }
+  checks.push(c1);
+
+  /* ② 现金安全 */
+  let c2;
+  if(!cashAt) c2={k:'现金安全',lp:'n',v:'未设置',
+    d:'还没填过账户余额，算不出保障月数。去「资金」页填一次此刻的可动用余额，之后程序会按流水自己推算。'};
+  else if(avgNeed<=0) c2={k:'现金安全',lp:'n',v:'缺支出记录',d:'还算不出每月必要支出。记满一个月再看。'};
+  else{
+    const mo=cashCur/avgNeed;
+    const d=`账户现金 <b>${yuan(cashCur)}</b>，月均必要支出 <b>${yuan(avgNeed)}</b>（只算必要、且排除一次性），
+      断收入能撑 <b>${mo.toFixed(1)} 个月</b>。你把应急储备设成了 ${RM} 个月，这里就以此为合格线。
+      看的是极端情况下的下限，不是日常花销。`;
+    c2={k:'现金安全',lp:mo<RM*0.5?'r':mo<RM?'y':'g',v:mo.toFixed(1)+' 个月',d};
+  }
+  checks.push(c2);
+
+  /* ③ 固定支出压力 */
+  let c3;
+  if(!stableInc) c3={k:'固定支出压力',lp:'n',v:'缺稳定收入',d:'没有稳定收入记录，算不出占比。工资记进来即可。'};
+  else{
+    const r3=cur.fixed/stableInc;
+    c3={k:'固定支出压力',lp:r3<0.35?'g':r3<0.5?'y':'r',v:pct(r3),
+      d:`本期固定支出 <b>${yuan(cur.fixed)}</b>（房租、还款、订阅这类不可调整的），占稳定收入 ${yuan(stableInc)} 的 <b>${pct(r3)}</b>。
+        这部分在月初就已经锁死，剩下的 ${yuan(stableInc-cur.fixed)} 才是能自己安排的。`};
+  }
+  checks.push(c3);
+
+  /* ④ 负债压力 */
+  let c4;
+  if(cur.debt<=0) c4={k:'负债压力',lp:'g',v:'无还款记录',d:'本期没有记录到贷款或信用卡还款。如果实际有，记一笔「还款」分类，这一项才准。'};
+  else if(!stableInc) c4={k:'负债压力',lp:'n',v:'缺稳定收入',d:'有还款记录但没有稳定收入数据，算不出压力比例。'};
+  else{
+    const r4=cur.debt/stableInc;
+    c4={k:'负债压力',lp:r4<0.2?'g':r4<0.4?'y':'r',v:pct(r4),
+      d:`每月还款 <b>${yuan(cur.debt)}</b>，占稳定收入的 <b>${pct(r4)}</b>。看的是每月现金流压力，不是欠款总额——
+        总额大但月供轻、现金厚，未必危险；总额小但月供吃掉大半收入，才是真问题。`};
+  }
+  checks.push(c4);
+
+  /* ── 第二层：只有触发才查 ── */
+  const prevBal=prior.filter(s=>s.inc>0).map(s=>s.inc-s.exp);
+  if(prior.length>=1&&cur.inc>0&&prevBal.length){
+    const drop=avg(prevBal)-bal;
+    if(drop>=300&&drop>=Math.abs(avg(prevBal))*0.25){
+      const incDrop=avg(prior.map(s=>s.inc))-cur.inc, expUp=cur.exp-avg(prior.map(s=>s.exp));
+      const deltas=Object.keys(cur.byCat).map(k=>[k,cur.byCat[k]-avg(prior.map(s=>s.byCat[k]||0))])
+        .sort((a,b)=>b[1]-a[1]);
+      const top=deltas[0];
+      const onceInTop=top?sum(cur.onceRs.filter(r=>r.cat===top[0])):0;
+      const oneShot=cur.once>=drop*0.7;
+      let why,judge,adv,sev;
+      if(incDrop>expUp&&incDrop>0){
+        const stDrop=avg(prior.map(s=>s.stable))-cur.stable;
+        why=`收入减少 ${yuan(incDrop)} 是主因，支出变化 ${expUp>=0?'+':''}${yuan(expUp)}。`;
+        if(stDrop<incDrop*0.5){judge='减少的主要是奖金、报销这类一次性收入，稳定收入没有明显下降。';sev='g';
+          adv='属于收入结构的正常波动，不用调整支出计划。';}
+        else{judge=`稳定收入本身下降了 ${yuan(stDrop)}，会持续影响后面每个月。`;sev='r';
+          adv='按新的稳定收入重算固定支出占比，先看有没有能退订、能重谈的固定项。';}
+      }else{
+        why=`支出比前几期多了 ${yuan(expUp)}，`+(top&&top[1]>0?`增加最多的是${catOf(top[0]).n} ${yuan(top[1])}。`:'没有集中在某一类。');
+        if(oneShot){judge=`本期一次性支出 ${yuan(cur.once)}，足以解释这次下降${onceInTop>0?`（其中${catOf(top[0]).n}里有 ${yuan(onceInTop)} 是单笔大额）`:''}。属于短期波动。`;
+          sev='g';adv='不需要因此调整长期预算。下期如果结余自动回到原来水平，说明判断正确。';}
+        else{let n=0,mm=P; while(has(mm)){const s=mstat(mm),p=mstat(prevYM(mm,1));
+            if(has(prevYM(mm,1))&&(s.inc-s.exp)<(p.inc-p.exp)){n++;mm=prevYM(mm,1);}else break;}
+          judge=n>=3?`结余已经连续 ${n} 期下降，且不是一次性消费造成的，是趋势。`
+            :'增加的是可重复发生的日常消费，不是单次大额。';
+          sev=n>=3?'r':'y';
+          adv=top&&top[1]>0?`先盯${catOf(top[0])
+            .n}这一类：它比平时多了 ${yuan(top[1])}，只要压回原来的水平，结余就能补回大半。`
+            :'下期重点看支出总量是否回落，回不去就要动固定项。';}
+      }
+      issues.push({sev,h:`本期结余比前几期少了 ${yuan(drop)}`,
+        rows:[['发生了什么',`结余 ${yuan(bal)}，前几期平均 ${yuan(avg(prevBal))}。`],['为什么',why],['是否严重',judge],['要不要处理',adv]]});
+    }
+  }
+
+  /* 消费异常：与自己的历史基准比 */
+  if(prior.length>=2){
+    const thr=Math.max(200,stableInc*0.05);
+    const abn=Object.keys(cur.byCat).map(k=>{
+      const base=avg(prior.map(s=>s.byCat[k]||0)); return {k,cur:cur.byCat[k],base,d:cur.byCat[k]-base};
+    }).filter(x=>x.d>=thr&&(x.base===0?x.cur>=thr*1.5:x.d/x.base>=0.5))
+      .sort((a,b)=>b.d-a.d).slice(0,2);
+    abn.forEach(x=>{
+      const c=catOf(x.k),f=flags,rs=cur.expRs.filter(r=>r.cat===x.k);
+      const onceSum=sum(rs.filter(r=>f(r).once)), need=RULE[x.k]&&RULE[x.k].need;
+      const repeated=prior.filter(s=>(s.byCat[x.k]||0)>x.base*1.2).length>=2;
+      const oneShot=onceSum>=x.d*0.7;
+      issues.push({sev:oneShot?'g':repeated?'r':'y',
+        h:`${c.n}明显高于你自己的平常水平`,
+        rows:[['发生了什么',`本期 ${yuan(x.cur)}，过去 ${prior.length} 期平均 ${yuan(x.base)}，多了 ${yuan(x.d)}。`],
+          ['为什么',rs.length?`共 ${rs.length} 笔，最大一笔 ${yuan(Math.max(...rs.map(r=>r.amount)))}${onceSum?`，其中 ${yuan(onceSum)} 被判定为一次性大额`:'，没有特别突出的单笔'}。`:''],
+          ['是否严重',oneShot?'主要来自一次性大额，不代表日常消费失控。'
+            :repeated?'不是单次，前面几期也在往上走，属于持续变化。'
+            :need?'属于必要支出，金额上升但不是可随意削减的部分。':'是可调整的消费，且这一期是单独抬高。'],
+          ['要不要处理',oneShot?'不用。下期回到平常水平就说明是正常波动。'
+            :repeated?`需要。把${c.n}压回 ${yuan(x.base)} 附近，每月能多留 ${yuan(x.d)}。`
+            :`先观察一期。如果下期还是这个水平，再按每月多 ${yuan(x.d)} 来处理。`]]});
+    });
+  }
+
+  /* 固定支出变化 */
+  if(prior.length>=1){
+    const bf=avg(prior.map(s=>s.fixed)), df=cur.fixed-bf;
+    if(df>=100&&(bf===0||df/bf>=0.1)){
+      const news=Object.keys(cur.byCat).filter(k=>(RULE[k]||{}).fixed&&cur.byCat[k]-avg(prior.map(s=>s.byCat[k]||0))>=50)
+        .map(k=>catOf(k).n);
+      issues.push({sev:stableInc&&cur.fixed/stableInc>=0.5?'r':'y',
+        h:`固定支出比之前多了 ${yuan(df)}`,
+        rows:[['发生了什么',`本期固定支出 ${yuan(cur.fixed)}，之前平均 ${yuan(bf)}。`],
+          ['为什么',news.length?`增加集中在${news.join('、')}。`:'新增了长期性支出。'],
+          ['是否严重','一次性消费花完就没了，固定支出会持续压缩以后每个月的可支配收入，影响是累积的。'+
+            (stableInc?`按现在的水平，一年多支出约 ${yuan(df*12)}。`:'')],
+          ['要不要处理',`逐项确认这些是不是长期需要。订阅类最容易堆积，退掉一项每月立刻回来 ${yuan(df/Math.max(news.length,1))} 左右。`]]});
+    }
+  }
+
+  /* 垫付与报销：独立模块，不污染上面四项，但计入现金流风险 */
+  const open_=advOpen(), owe=owed();
+  const stale=open_.filter(x=>(Date.now()-new Date(x.a.date+'T00:00:00'))/864e5>=60);
+  const ratio=cashCur>0?owe/cashCur:null;
+  let rl='g',rt='无待报销',rd='本期没有未收回的垫付款。';
+  if(owe>0){
+    rl=(ratio!==null&&ratio>=0.5)||(ratio===null&&avgNeed>0&&owe>=avgNeed)?'r':'y';
+    rt='待收 '+yuan(owe);
+    rd=`有 <b>${yuan(owe)}</b> 垫出去还没收回，分布在 ${open_.length} 笔上。这笔钱不是消费也不是亏损，但现在不在你手上。`
+      +(ratio!==null?`相当于可动用现金的 <b>${pct(ratio)}</b>。`:'')
+      +(rl==='r'?'占用比例偏高，报销一旦拖延会直接压到现金安全。':'');
+    if(stale.length) rd+=` 其中 ${stale.length} 笔已经超过 60 天。`;
+  }
+  const reimb={lp:rl,v:rt,d:rd,owe,open:open_,stale,
+    advOut:cur.advOut,reimIn:cur.reimIn,ratio};
+  if(rl!=='g') issues.push({sev:rl==='r'?'r':'g',
+    h:rl==='r'?`待报销 ${yuan(owe)} 占用了较多现金`:`存在 ${yuan(owe)} 待报销款`,
+    rows:[['发生了什么',`本期垫付 ${yuan(cur.advOut)}，收到报销 ${yuan(cur.reimIn)}，累计待收回 ${yuan(owe)}。`],
+      ['为什么','这是替公司或他人先付的钱，属于短期资金占用，不是个人消费增加。'],
+      ['是否严重',rl==='r'?`占可动用现金 ${ratio!==null?pct(ratio):'较大比例'}，属于现金流风险，不是消费问题。`
+        :'金额在可承受范围，个人收入、消费和结余都不受影响。'],
+      ['要不要处理',stale.length?`先催超过 60 天那 ${stale.length} 笔。收不回来的，在明细里标为「报销不了」，它才会正确计入个人支出。`
+        :rl==='r'?'优先推进报销进度，暂时避免继续大额垫付。':'不用。盯着报销进度即可。']]});
+
+  if(cashCur&&avgNeed>0&&owe>0){
+    const c2i=checks.find(c=>c.k==='现金安全');
+    c2i.d+=` 另有 ${yuan(owe)} 待报销在外，收回后保障月数会到 ${((cashCur+owe)/avgNeed).toFixed(1)} 个月。`;
+  }
+
+  const gradeChecks=worst(checks.reduce((a,c)=>worst(a,c.lp),'g'),rl==='r'?'r':'g');
+  const disp=disposable();
+  const gradeIssues=issues.reduce((a,i)=>worst(a,i.sev),'g');
+  const grade=worst(gradeChecks,gradeIssues);
+  return {P,partial,cur,prior,checks,issues,grade,stableInc,avgNeed,bal,rate,reimb,disp,cashCur};
+}
+
+function renderCheck(){
+  const el=$('#p-check');
+  const done=records.filter(isRealExp).length;
+  if(done<5){
+    el.innerHTML=`<div class="empty"><b>数据还不够做体检</b>
+      目前 ${done} 笔支出。体检要拿你自己的历史当基准，至少需要记满一个月、并且把收入也记进来。<br>
+      先用「记一笔」把日常流水记上，这一页会自己出现结论。</div>`;
+    return;
+  }
+  const A=analyze();
+  const face={g:['🟢','正常','当前没有发现需要主动处理的财务问题。'],
+    y:['🟡','关注','发现了异常，但还不能确认是长期问题。'],
+    r:['🔴','需要处理','已经出现影响财务稳定性的问题。']}[A.grade];
+  const lead=A.grade==='g'
+    ? `收入能覆盖支出，现金流正常，未发现明显异常趋势。${A.issues.length?'部分支出有波动，但属于短期或一次性变化。':''}建议：维持现状，不需要主动调整。`
+    : A.grade==='y'
+    ? `发现 ${A.issues.length||1} 处需要留意的变化，尚不足以判定为长期问题。建议：继续观察后续 1～2 个周期，先不急着改预算。`
+    : '问题已经在影响现金流或长期负担能力，建议优先处理下面影响最大的那一项。';
+  const need=A.issues.filter(i=>i.sev!=='g'), cleared=A.issues.filter(i=>i.sev==='g');
+
+  el.innerHTML=`
+  <div class="verdict ${A.grade}">
+    <div class="lamp">本期财务体检</div>
+    <h2>${face[0]} ${face[1]}</h2>
+    <p>${lead}</p>
+    <div class="when">体检周期：${A.P.replace('-',' 年 ')} 月${A.partial?'（当月尚未结束，结论为初步）':'（完整月）'}
+      ${A.prior.length?` · 对照前 ${A.prior.length} 期`:' · 还没有可对照的历史，部分判断从简'}</div>
+  </div>
+
+  <button class="cashcard" id="toFund" style="width:100%;text-align:left;display:block">
+    <div class="lb">💰 可支配资金</div>
+    <div class="big num ${A.disp.total<0?'neg':''}">${yuan(A.disp.total)}</div>
+    <div class="hint">账户现金 ${yuan(A.cashCur)}，扣掉待报销、预留、应急和已分配之后剩下的。点这里看明细 →</div>
+  </button>
+
+  <h3 class="sec">基础检查</h3>
+  ${A.checks.map((c,i)=>`<div class="chk" data-i="${i}"><button>
+    <span class="lp ${c.lp}"></span><span class="nm">${c.k}</span>
+    <span class="vv num">${c.v}</span><span class="arw">▾</span></button>
+    <div class="cv">${c.d}</div></div>`).join('')}
+
+  ${(A.reimb.owe>0||A.reimb.advOut>0||A.reimb.reimIn>0)?`
+  <h3 class="sec">💼 垫付与报销</h3>
+  <div class="adv">
+    <div class="r"><span>本期垫付</span><span class="num">${yuan(A.reimb.advOut)}</span></div>
+    <div class="r"><span>本期收到报销</span><span class="num">${yuan(A.reimb.reimIn)}</span></div>
+    <div class="r big"><span><span class="lp ${A.reimb.lp}" style="display:inline-block;margin-right:7px"></span>当前待报销</span>
+      <span class="num">${yuan(A.reimb.owe)}</span></div>
+    <div style="font-size:12.5px;color:var(--ink-soft);line-height:1.65;margin-top:9px">${A.reimb.d}</div>
+    ${A.reimb.open.length?`<ul>${A.reimb.open.slice(0,5).map(x=>`<li>${x.a.date.slice(5)} ${catOf(x.a.cat).n} ${x.a.note||''} · 待收 ${yuan(x.left)}${
+      (Date.now()-new Date(x.a.date+'T00:00:00'))/864e5>=60?' · 已超 60 天':''}</li>`).join('')}</ul>`:''}
+  </div>`:''}
+
+  <h3 class="sec">发现的问题</h3>
+  ${need.length?need.map(i=>`<div class="issue ${i.sev}"><h4>${i.sev==='r'?'🔴':'🟡'} ${i.h}</h4>
+    <dl>${i.rows.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl></div>`).join('')
+    :`<div class="ok">未发现需要处理的问题。${A.issues.length?'有变化但都已排查清楚，见下。':'各项指标处在正常范围，支出结构也没有偏离你自己的历史水平。'}</div>`}
+
+  ${cleared.length?`<h3 class="sec">已排查 · 无需处理</h3>`+cleared.map(i=>`<div class="issue g"><h4>🟢 ${i.h}</h4>
+    <dl>${i.rows.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl></div>`).join(''):''}
+
+  <h3 class="sec">生成报告</h3>
+  <button class="aibtn" id="repBtn">📋 生成分析报告</button>
+  <div id="repOut"></div>
+  <div id="aiOut"></div>
+  <div class="foot">所有金额、比例、趋势都由程序算出，AI 只负责解读，不参与计算。<br>
+    体检基于你自己记下的流水，漏记会直接改变结论。这是对收支结构的观察，不是投资或理财建议。</div>`;
+
+  $('#toFund').onclick=()=>document.querySelector('nav button[data-p="fund"]').click();
+  el.querySelectorAll('.chk>button').forEach(b=>b.onclick=()=>b.parentElement.classList.toggle('open'));
+  $('#repBtn').onclick=()=>showReport(A);
+  $('#expBtn').onclick=()=>{
+    const blob=new Blob([JSON.stringify(
+      {records,budget,cashBase,cashAt,migrated,buckets,allocs,settings},null,1)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='流水账备份-'+key(new Date())+'.json';a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  };
+  $('#impBtn').onclick=()=>$('#impFile').click();
+  $('#impFile').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const rd=new FileReader();
+    rd.onload=async()=>{
+      try{
+        const d=JSON.parse(rd.result);
+        if(!Array.isArray(d.records)) throw 0;
+        const have=new Set(records.map(r=>r.id));
+        const add=d.records.filter(r=>!have.has(r.id));
+        records=records.concat(add);
+        if(d.budget)budget=d.budget;
+        const cb=d.cashBase!==undefined?d.cashBase:d.cash;
+        if(cb!==undefined){cashBase=cb;cashAt=d.cashAt||cashAt;}
+        if(d.settings)settings=Object.assign(settings,d.settings);
+        if(d.buckets&&d.buckets.length)buckets=d.buckets;
+        if(d.allocs){const hb=new Set(allocs.map(a=>a.id));
+          allocs=allocs.concat(d.allocs.filter(a=>!hb.has(a.id)));}
+        await save(); renderAll(); renderCheck();
+        toast(`已合并 ${add.length} 笔（重复的跳过）`);
+      }catch(err){toast('文件读不出来，确认是本 App 导出的备份');}
+    };
+    rd.readAsText(f);
+  };
+}
+
+/* AI 只解读程序算好的结构化指标 */
+/* ══════ 标准化报告：程序算完，用户自己拿去问任何 AI ══════ */
+function buildReport(A){
+  const c=A.cur, D=A.disp, L=A.P.replace('-',' 年 ')+' 月';
+  const lamp={g:'🟢 正常',y:'🟡 关注',r:'🔴 需要处理'}[A.grade];
+  const cats=Object.entries(c.byCat).sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>`${catOf(k).n}：${yuan(v)}`).join('\n');
+  const chk=A.checks.map(x=>`${{g:'🟢',y:'🟡',r:'🔴',n:'⚪'}[x.lp]} ${x.k}：${x.v}`).join('\n');
+  const strip=t=>String(t).replace(/<[^>]+>/g,'');
+  const iss=A.issues.length?A.issues.map(i=>
+    `${{g:'🟢 已排查',y:'🟡 关注',r:'🔴 需处理'}[i.sev]}｜${i.h}\n`+
+    i.rows.map(([a,b])=>`  ${a}：${strip(b)}`).join('\n')).join('\n\n')
+    :'未发现需要说明的异常。';
+  const bk=buckets.map(b=>`${b.name}：${b.pct}%，已累计 ${yuan(bkBal(b.id))}`+
+    (b.goal?`，目标 ${yuan(b.goal)}（${Math.round(bkBal(b.id)/b.goal*100)}%）`:'')).join('\n');
+
+  return `【个人财务体检报告】
+统计周期：${L}${A.partial?'（当月尚未结束，为初步数据）':'（完整月）'}
+生成时间：${key(new Date())}
+
+一、收支情况
+本期真实收入：${yuan(c.inc)}（其中稳定收入 ${yuan(c.stable)}）
+本期个人支出：${yuan(c.exp)}
+本期结余：${yuan(A.bal)}
+结余率：${A.rate===null?'无法计算（本期无收入记录）':pct(A.rate)}
+说明：垫付款不计入个人支出，报销到账不计入个人收入。
+
+二、现金情况
+账户现金：${yuan(A.cashCur)}
+待报销（垫出去未收回）：${yuan(A.reimb.owe)}
+必要支出预留（${settings.needMo} 个月）：${yuan(A.avgNeed*settings.needMo)}
+应急储备（${settings.reserveMo} 个月）：${yuan(A.avgNeed*settings.reserveMo)}
+已划入各资金方向：${yuan(bkTotal())}
+当前可支配资金：${yuan(D.total)}
+月均必要支出：${yuan(A.avgNeed)}
+本期实际现金变化：${yuan(c.cashFlow)}
+
+三、固定与负债
+固定支出：${yuan(c.fixed)}${A.stableInc?`（占稳定收入 ${pct(c.fixed/A.stableInc)}）`:''}
+每月债务还款：${yuan(c.debt)}${A.stableInc&&c.debt?`（占稳定收入 ${pct(c.debt/A.stableInc)}）`:''}
+月均稳定收入：${yuan(A.stableInc)}
+
+四、主要支出
+${cats||'（本期无支出记录）'}
+其中一次性支出：${yuan(c.once)}
+
+五、基础检查
+${chk}
+
+六、异常情况
+${iss}
+
+七、财务体检结论
+${lamp}
+
+八、资金分配
+${bk}
+（百分比合计 ${pctSum()}%）
+
+九、数据说明
+本报告全部数字由记账程序计算，未经任何模型推算。
+结论只基于我自己记下的流水，漏记会直接改变结果。`;
+}
+
+const QT={
+  q1:['帮我找问题',`请根据下面这份个人财务体检报告，帮我找出目前最值得关注的 3 个财务问题。
+
+不要为了给出建议而强行制造问题。如果当前没有明显问题，请直接告诉我无需调整。
+报告里的数字已经算好，请不要重新计算或推算新的数字。`],
+  q2:['帮我做资金规划',`请根据下面的个人财务情况，帮我检查目前的资金分配是否合理。
+
+重点分析：可支配资金、应急储备、储蓄、投资、自由消费、未来大额支出。
+不要假设我必须投资。如果当前更适合储蓄或建立现金储备，请直接说明原因。`],
+  q3:['帮我控制支出',`请分析下面的个人财务报告。
+
+不要简单告诉我"少花钱"。请找出真正影响我财务结果的支出，区分：
+1. 必要支出  2. 固定支出  3. 一次性支出  4. 可调整支出
+最后只给出最值得执行的 3 项建议。`]
+};
+
+function showReport(A){
+  const out=$('#repOut'), txt=buildReport(A);
+  out.innerHTML=`<div class="rep" id="repTxt">${txt.replace(/</g,'&lt;')}</div>
+    <div class="qs">
+      <button data-q="raw">复制报告</button>
+      ${Object.entries(QT).map(([k,v])=>`<button data-q="${k}">${v[0]}</button>`).join('')}
+    </div>
+    <div class="foot">「复制报告」给你纯数据。后面三个会在报告前面加上一段提问，
+      复制完直接粘进 Claude、DeepSeek、ChatGPT 都行——App 不替你选用哪个。</div>`;
+  out.onclick=async e=>{
+    const b=e.target.closest('[data-q]'); if(!b) return;
+    const k=b.dataset.q;
+    const text=k==='raw'?txt:QT[k][1]+'\n\n以下是我的财务数据：\n\n'+txt;
+    try{ await navigator.clipboard.writeText(text); toast('已复制，粘贴给 AI 即可'); }
+    catch(err){ toast('复制失败，可以长按上面的报告手动选中'); }
+  };
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ── 通用 ── */
+document.querySelector('nav').onclick=e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.p));
+  document.querySelector('main').scrollTop=0;
+  if(b.dataset.p==='stat') renderStat();
+  if(b.dataset.p==='fund') renderFund();
+  if(b.dataset.p==='check') renderCheck();
+};
+let tt;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');
+  clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),1600);}
+function renderAll(){
+  calcAvg(); renderHead(); renderCats(); renderOpt(); renderAmt(); renderList();
+  if($('#p-stat').classList.contains('on')) renderStat();
+  if($('#p-fund').classList.contains('on')) renderFund();
+  if($('#p-check').classList.contains('on')) renderCheck();
+}
+$('#date').value=key(new Date());
+$('#note').addEventListener('keydown',e=>{if(e.key==='Enter'){e.target.blur();$('#save').click()}});
+renderCats(); renderOpt(); load();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
